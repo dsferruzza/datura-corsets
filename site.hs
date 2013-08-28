@@ -1,6 +1,7 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
 import           Data.Monoid ((<>))
+import           Data.List (isInfixOf)
 import           Hakyll
 import           System.FilePath (takeBaseName,takeDirectory,(</>),splitFileName,splitPath,joinDrive,isDrive,isPathSeparator,hasDrive)
 import           Control.Applicative (Alternative (..), (<$>))
@@ -24,18 +25,19 @@ main = do
         compile compressCssCompiler
 
     match "articles/**.md" $ do
-        route $ setExtension "html"
+        route $ niceArticleRoute `composeRoutes` setExtension "html"
         compile $ pandocCompiler
             >>= loadAndApplyTemplate "templates/article.html" articleContext
             >>= loadAndApplyTemplate "templates/default.html" defaultContext
+            >>= removeIndexHtml
             >>= relativizeUrlsFix
 
     match "articles/**.jpg" $ do
-        route   idRoute
+        route $ niceArticleRoute
         compile copyFileCompiler
 
     match "articles/**.jpg" $ version "thumb" $ do
-        route $ setExtension "thumb.jpg"
+        route $ niceArticleRoute `composeRoutes` setExtension "thumb.jpg"
         compile $ getResourceLBS
             >>= withItemBody (unixFilterLBS "convert" ["-resize", "100x100", "-", "-"])
 
@@ -50,12 +52,15 @@ main = do
                 >>= applyAsTemplate indexCtx
                 >>= loadAndApplyTemplate "templates/index.html" indexCtx
                 >>= loadAndApplyTemplate "templates/default.html" defaultContext
-                >>= relativizeUrls
+                >>= removeIndexHtml
+                >>= relativizeUrlsFix
 
     match "templates/*" $ compile templateCompiler
 
 
 --------------------------------------------------------------------------------
+-- ARTICLE CONTEXT
+
 getPicsInDir :: Compiler [Item CopyFile]
 getPicsInDir = do
     postPath <- toFilePath <$> getUnderlying
@@ -74,6 +79,22 @@ articleContext :: Context String
 articleContext =
     listField "photos" picContext getPicsInDir <>
     defaultContext
+
+--------------------------------------------------------------------------------
+-- USE NICE ROUTES FOR ARTICLES
+-- Inspired by: http://hub.darcs.net/DarkFox/DarkFox-blog/browse/site.hs
+
+niceArticleRoute :: Routes
+niceArticleRoute = gsubRoute "articles/" (const "")
+
+removeIndexHtml :: Item String -> Compiler (Item String)
+removeIndexHtml = return . (withUrls removeIndexStr <$>)
+  where removeIndexStr :: String -> String
+        removeIndexStr u = case splitFileName u of
+            (d, "index.html") | isLocal d -> d
+            _                             -> u
+        isLocal :: String -> Bool
+        isLocal = not . (isInfixOf "://")
 
 --------------------------------------------------------------------------------
 -- FIX RELATIVE URL BUG ON WINDOWS
