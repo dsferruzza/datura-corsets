@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
-import           Data.Monoid (mappend,mconcat)
+import           Data.Monoid ((<>))
 import           Hakyll
 import           System.FilePath (takeBaseName,takeDirectory,(</>),splitFileName,splitPath,joinDrive,isDrive,isPathSeparator,hasDrive)
 import           Control.Applicative (Alternative (..), (<$>))
@@ -44,7 +44,7 @@ main = do
         compile $ do
             articles <- loadAll "articles/**.md"
             let indexCtx =
-                    listField "articles" articleContext (return articles) `mappend`
+                    listField "articles" articleContext (return articles) <>
                     defaultContext
             pandocCompiler
                 >>= applyAsTemplate indexCtx
@@ -64,7 +64,7 @@ getPicsInDir = do
 
 picContext :: Context CopyFile
 picContext =
-    urlField "url" `mappend`
+    urlField "url" <>
     (field "thumb" $ \item -> do
         pic <- fmap (maybe empty toUrl) . getRoute $ itemIdentifier item
         let thumb = (foldl1 (++) (splitAll ".jpg" pic)) ++ ".thumb.jpg"
@@ -72,7 +72,7 @@ picContext =
 
 articleContext :: Context String
 articleContext =
-    listField "photos" picContext getPicsInDir `mappend`
+    listField "photos" picContext getPicsInDir <>
     defaultContext
 
 --------------------------------------------------------------------------------
