@@ -1,0 +1,7 @@
+_*
+*.hi
+*.o
+site.exe
+
+*.sublime-project
+*.sublime-workspace
