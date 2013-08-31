@@ -16,6 +16,24 @@ main = do
   setForeignEncoding utf8
   hakyll $ do
 
+    tags <- buildTags "articles/**.md" (fromCapture "tags/*.html")
+
+    tagsRules tags $ \tag pattern -> do
+        let title = "Posts tagged " ++ tag
+        route idRoute
+        compile $ do
+            list <- articleList tags pattern chronological
+            makeItem ""
+                >>= loadAndApplyTemplate "templates/tags-articles.html"
+                        (constField "title" title <>
+                            constField "body" list <>
+                            defaultContext)
+                >>= loadAndApplyTemplate "templates/default.html"
+                        (constField "title" title <>
+                            defaultContext)
+                >>= removeIndexHtml
+                >>= relativizeUrlsFix
+
     match "images/*" $ do
         route   idRoute
         compile copyFileCompiler
@@ -27,9 +45,8 @@ main = do
     match "articles/**.md" $ do
         route $ niceArticleRoute `composeRoutes` setExtension "html"
         compile $ pandocCompiler
-            >>= loadAndApplyTemplate "templates/article.html" articleContext
+            >>= loadAndApplyTemplate "templates/article.html" (articleContext tags)
             >>= loadAndApplyTemplate "templates/default.html" defaultContext
-            >>= removeIndexHtml
             >>= relativizeUrlsFix
 
     match "articles/**.jpg" $ do
@@ -46,7 +63,7 @@ main = do
         compile $ do
             articles <- loadAll "articles/**.md"
             let indexCtx =
-                    listField "articles" articleContext (return articles) <>
+                    listField "articles" (articleContext tags) (return articles) <>
                     defaultContext
             pandocCompiler
                 >>= applyAsTemplate indexCtx
@@ -75,10 +92,18 @@ picContext =
         let thumb = (foldl1 (++) (splitAll ".jpg" pic)) ++ ".thumb.jpg"
         return thumb)
 
-articleContext :: Context String
-articleContext =
+articleContext :: Tags -> Context String
+articleContext tags =
     listField "photos" picContext getPicsInDir <>
+    tagsField "prettytags" tags <>
     defaultContext
+
+articleList :: Tags -> Pattern -> ([Item String] -> Compiler [Item String]) -> Compiler String
+articleList tags pattern preprocess' = do
+    articleItemTpl <- loadBody "templates/tags-article.html"
+    articles <- loadAll pattern
+    processed <- preprocess' articles
+    applyTemplateList articleItemTpl (articleContext tags) processed
 
 --------------------------------------------------------------------------------
 -- USE NICE ROUTES FOR ARTICLES
