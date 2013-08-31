@@ -5,7 +5,13 @@ import           Data.List (isInfixOf,sortBy)
 import           Data.Time.Clock (UTCTime (..))
 import           Data.Time.Format (parseTime)
 import           Data.Ord (comparing)
+import           Data.List (intercalate)
 import           Hakyll
+import           Hakyll.Web.Html
+import           Text.Blaze.Html                 (toHtml, toValue, (!))
+import           Text.Blaze.Html.Renderer.String (renderHtml)
+import qualified Text.Blaze.Html5 as H
+import qualified Text.Blaze.Html5.Attributes as A
 import           System.FilePath (takeBaseName,takeDirectory,(</>),splitFileName,splitPath,joinDrive,isDrive,isPathSeparator,hasDrive)
 import           System.Locale (TimeLocale, defaultTimeLocale)
 import           Control.Applicative (Alternative (..), (<$>))
@@ -69,6 +75,7 @@ main = do
             articles <- loadAll "articles/**.md"
             let indexCtx =
                     listField "articles" (articleContext tags) (return articles) <>
+                    field "tags" (\_ -> renderTagListCustom tags) <>
                     defaultContext
             pandocCompiler
                 >>= applyAsTemplate indexCtx
@@ -111,6 +118,14 @@ articleList tags pattern preprocess' = do
     articles <- loadAll pattern
     processed <- preprocess' articles
     applyTemplateList articleItemTpl (articleContext tags) processed
+
+--------------------------------------------------------------------------------
+
+renderTagListCustom :: Tags -> Compiler (String)
+renderTagListCustom = renderTags makeLink (intercalate ", ")
+  where
+    makeLink tag url count _ _ = renderHtml $
+        H.a ! A.href (toValue url) $ toHtml (tag)
 
 --------------------------------------------------------------------------------
 -- USE NICE ROUTES FOR ARTICLES
