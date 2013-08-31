@@ -1,10 +1,15 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
 import           Data.Monoid ((<>))
-import           Data.List (isInfixOf)
+import           Data.List (isInfixOf,sortBy)
+import           Data.Time.Clock (UTCTime (..))
+import           Data.Time.Format (parseTime)
+import           Data.Ord (comparing)
 import           Hakyll
 import           System.FilePath (takeBaseName,takeDirectory,(</>),splitFileName,splitPath,joinDrive,isDrive,isPathSeparator,hasDrive)
+import           System.Locale (TimeLocale, defaultTimeLocale)
 import           Control.Applicative (Alternative (..), (<$>))
+import           Control.Monad (msum,liftM)
 import           GHC.IO.Encoding
 
 
@@ -22,7 +27,7 @@ main = do
         let title = "Posts tagged " ++ tag
         route idRoute
         compile $ do
-            list <- articleList tags pattern chronological
+            list <- articleList tags pattern alphabetical
             makeItem ""
                 >>= loadAndApplyTemplate "templates/tags-articles.html"
                         (constField "title" title <>
@@ -122,6 +127,27 @@ removeIndexHtml = return . (withUrls removeIndexStr <$>)
             _                             -> u
         isLocal :: String -> Bool
         isLocal = not . (isInfixOf "://")
+
+--------------------------------------------------------------------------------
+
+fakeGetItemUTC :: MonadMetadata m
+           => TimeLocale        -- ^ Output time locale
+           -> Identifier        -- ^ Input page
+           -> m UTCTime         -- ^ Parsed UTCTime
+fakeGetItemUTC locale id' = do
+    maybe empty' return $ msum $ [parseTime' "%Y" "0000"]
+  where
+    empty'     = fail $ "Hakyll.Web.Template.Context.fakeGetItemUTC: " ++
+        "could not parse time for " ++ show id'
+    parseTime' = parseTime locale
+
+alphabetical :: MonadMetadata m => [Item a] -> m [Item a]
+alphabetical =
+    sortByM $ fakeGetItemUTC defaultTimeLocale . itemIdentifier
+  where
+    sortByM :: (Monad m, Ord k) => (a -> m k) -> [a] -> m [a]
+    sortByM f xs = liftM (map fst . sortBy (comparing snd)) $
+                   mapM (\x -> liftM (x,) (f x)) xs
 
 --------------------------------------------------------------------------------
 -- FIX RELATIVE URL BUG ON WINDOWS
