@@ -84,6 +84,8 @@ getPicsInDir = do
     let pattern = fromGlob $ takeDirectory postPath ++ "/*.jpg"
     loadAll (pattern .&&. hasNoVersion)
 
+-- TODO: getPicsInDir which returns a list with only the first pic (alphabetical order)
+
 picContext :: Context CopyFile
 picContext =
     urlField "url" <>
