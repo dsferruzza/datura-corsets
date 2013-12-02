@@ -94,13 +94,11 @@ getPicsInDir = do
     let pattern = fromGlob $ takeDirectory postPath ++ "/*.jpg"
     loadAll (pattern .&&. hasNoVersion)
 
-{-getFirstPicInDir :: Compiler [Item CopyFile]
+getFirstPicInDir :: Compiler [Item CopyFile]
 getFirstPicInDir = do
     postPath <- toFilePath <$> getUnderlying
-    let pattern = fromGlob $ takeDirectory postPath ++ "/*.jpg"
-    loadAll $ fst $ getMatches (pattern .&&. hasNoVersion)
--}
--- TODO: getPicsInDir which returns a list with only the first pic (alphabetical order)
+    let pattern = fromGlob $ takeDirectory postPath ++ "/index.jpg"
+    loadAll (pattern .&&. hasNoVersion)
 
 picContext :: Context CopyFile
 picContext =
@@ -113,6 +111,7 @@ picContext =
 articleContext :: Tags -> Context String
 articleContext tags =
     listField "photos" picContext getPicsInDir <>
+    listField "une" picContext getFirstPicInDir <>
     tagsField "prettytags" tags <>
     defaultContext
 
