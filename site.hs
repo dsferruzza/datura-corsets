@@ -39,9 +39,7 @@ main = do
                         (constField "title" title <>
                             constField "body" list <>
                             defaultContext)
-                >>= loadAndApplyTemplate "templates/default.html"
-                        (constField "title" title <>
-                            defaultContext)
+                >>= loadAndApplyTemplate "templates/default.html" (field "tags" (\_ -> renderTagListCustom tags) <> defaultContext)
                 >>= removeIndexHtml
                 >>= relativizeUrlsFix
 
@@ -57,7 +55,7 @@ main = do
         route $ niceArticleRoute `composeRoutes` setExtension "html"
         compile $ pandocCompiler
             >>= loadAndApplyTemplate "templates/article.html" (articleContext tags)
-            >>= loadAndApplyTemplate "templates/default.html" defaultContext
+            >>= loadAndApplyTemplate "templates/default.html" (field "tags" (\_ -> renderTagListCustom tags) <> defaultContext)
             >>= relativizeUrlsFix
 
     match "articles/**.jpg" $ do
@@ -80,7 +78,7 @@ main = do
             pandocCompiler
                 >>= applyAsTemplate indexCtx
                 >>= loadAndApplyTemplate "templates/index.html" indexCtx
-                >>= loadAndApplyTemplate "templates/default.html" defaultContext
+                >>= loadAndApplyTemplate "templates/default.html" (field "tags" (\_ -> renderTagListCustom tags) <> defaultContext)
                 >>= removeIndexHtml
                 >>= relativizeUrlsFix
 
@@ -96,6 +94,12 @@ getPicsInDir = do
     let pattern = fromGlob $ takeDirectory postPath ++ "/*.jpg"
     loadAll (pattern .&&. hasNoVersion)
 
+{-getFirstPicInDir :: Compiler [Item CopyFile]
+getFirstPicInDir = do
+    postPath <- toFilePath <$> getUnderlying
+    let pattern = fromGlob $ takeDirectory postPath ++ "/*.jpg"
+    loadAll $ fst $ getMatches (pattern .&&. hasNoVersion)
+-}
 -- TODO: getPicsInDir which returns a list with only the first pic (alphabetical order)
 
 picContext :: Context CopyFile
@@ -122,10 +126,10 @@ articleList tags pattern preprocess' = do
 --------------------------------------------------------------------------------
 
 renderTagListCustom :: Tags -> Compiler (String)
-renderTagListCustom = renderTags makeLink (intercalate ", ")
+renderTagListCustom = renderTags makeLink (intercalate "")
   where
     makeLink tag url count _ _ = renderHtml $
-        H.a ! A.href (toValue url) $ toHtml (tag)
+        H.li $ H.a ! A.href (toValue url) $ toHtml (tag)
 
 --------------------------------------------------------------------------------
 -- USE NICE ROUTES FOR ARTICLES
