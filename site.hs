@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings, TupleSections #-}
 import           Data.Monoid ((<>))
 import           Data.List (isInfixOf,sortBy)
 import           Data.Time.Clock (UTCTime (..))
