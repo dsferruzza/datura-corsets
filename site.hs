@@ -30,7 +30,7 @@ main = do
     tags <- buildTags "articles/**.md" (fromCapture "categories/*/index.html")
 
     tagsRules tags $ \tag pattern -> do
-        let title = "Posts tagged " ++ tag
+        let title = tag
         route idRoute
         compile $ do
             list <- articleList tags pattern alphabetical
@@ -74,7 +74,7 @@ main = do
     match "articles/**/index.jpg" $ version "cover" $ do
         route $ niceRoute "article" `composeRoutes` setExtension "cover.jpg"
         compile $ getResourceLBS
-            >>= withItemBody (unixFilterLBS "convert" ["-resize", "500x300", "-", "-"])
+            >>= withItemBody (unixFilterLBS "convert" ["-resize", "500x250", "-", "-"])
 
     match "index.md" $ do
         route $ setExtension "html"
@@ -119,7 +119,8 @@ picContext =
 
 coverPicContext :: Context CopyFile
 coverPicContext =
-    (field "url" $ \item -> do
+    urlField "url" <>
+    (field "cover" $ \item -> do
         pic <- fmap (maybe empty toUrl) . getRoute $ itemIdentifier item
         let cover = (foldl1 (++) (splitAll ".jpg" pic)) ++ ".cover.jpg"
         return cover)
