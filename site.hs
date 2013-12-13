@@ -71,6 +71,11 @@ main = do
         compile $ getResourceLBS
             >>= withItemBody (unixFilterLBS "convert" ["-resize", "100x100", "-", "-"])
 
+    match "articles/**/index.jpg" $ version "cover" $ do
+        route $ niceRoute "article" `composeRoutes` setExtension "cover.jpg"
+        compile $ getResourceLBS
+            >>= withItemBody (unixFilterLBS "convert" ["-resize", "500x300", "-", "-"])
+
     match "index.md" $ do
         route $ setExtension "html"
         compile $ do
@@ -112,10 +117,17 @@ picContext =
         let thumb = (foldl1 (++) (splitAll ".jpg" pic)) ++ ".thumb.jpg"
         return thumb)
 
+coverPicContext :: Context CopyFile
+coverPicContext =
+    (field "url" $ \item -> do
+        pic <- fmap (maybe empty toUrl) . getRoute $ itemIdentifier item
+        let cover = (foldl1 (++) (splitAll ".jpg" pic)) ++ ".cover.jpg"
+        return cover)
+
 articleContext :: Tags -> Context String
 articleContext tags =
     listField "photos" picContext getPicsInDir <>
-    listField "une" picContext getFirstPicInDir <>
+    listField "cover" coverPicContext getFirstPicInDir <>
     tagsField "prettytags" tags <>
     defaultContext
 
