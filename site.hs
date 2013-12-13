@@ -56,18 +56,18 @@ main = do
         compile compressCssCompiler
 
     match "articles/**.md" $ do
-        route $ niceArticleRoute `composeRoutes` setExtension "html"
+        route $ niceRoute "article" `composeRoutes` setExtension "html"
         compile $ pandocCompiler
             >>= loadAndApplyTemplate "templates/article.html" (articleContext tags)
             >>= loadAndApplyTemplate "templates/default.html" (field "tags" (\_ -> renderTagListCustom tags) <> defaultContext)
             >>= relativizeUrlsFix
 
     match "articles/**.jpg" $ do
-        route $ niceArticleRoute
+        route $ niceRoute "article"
         compile copyFileCompiler
 
     match "articles/**.jpg" $ version "thumb" $ do
-        route $ niceArticleRoute `composeRoutes` setExtension "thumb.jpg"
+        route $ niceRoute "article" `composeRoutes` setExtension "thumb.jpg"
         compile $ getResourceLBS
             >>= withItemBody (unixFilterLBS "convert" ["-resize", "100x100", "-", "-"])
 
@@ -135,11 +135,11 @@ renderTagListCustom = renderTags makeLink (intercalate "")
         H.li $ H.a ! A.href (toValue url) $ toHtml (tag)
 
 --------------------------------------------------------------------------------
--- USE NICE ROUTES FOR ARTICLES
+-- USE NICE ROUTES
 -- Inspired by: http://hub.darcs.net/DarkFox/DarkFox-blog/browse/site.hs
 
-niceArticleRoute :: Routes
-niceArticleRoute = gsubRoute "articles/" (const "")
+niceRoute :: String -> Routes
+niceRoute top = gsubRoute (top ++ "/") (const "")
 
 removeIndexHtml :: Item String -> Compiler (Item String)
 removeIndexHtml = return . (withUrls removeIndexStr <$>)
