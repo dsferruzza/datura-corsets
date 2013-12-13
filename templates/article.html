@@ -1,0 +1,24 @@
+<h1>$title$</h1>
+
+<div class="container">
+	<section class="row">
+		<div class="col-lg-offset-1 col-md-4 text-center">
+			$for(cover)$
+			<a href="$url$" data-lightbox="gallery"><img src="$cover$" alt="Image principale" /></a>
+			$endfor$
+		</div>
+		<div class="col-md-6">
+			$body$
+		</div>
+	</section>
+
+	<section class="row center-block">
+		<h2>Galerie</h2>
+
+		$for(photos)$
+	    <div class="col-xs-2">
+	    	<a href="$url$" data-lightbox="gallery" class="thumbnail"><img src="$thumb$" alt="Photo" class="img-responsive" /></a>
+	    </div>
+	    $endfor$
+	</section>
+</div>

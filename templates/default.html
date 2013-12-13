@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Datura Corsets - $title$</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<link href="/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/css/datura.css" rel="stylesheet">
+	<link href="/css/lightbox.css" rel="stylesheet">
+
+	<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+	<!--[if lt IE 9]>
+		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+		<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+	<![endif]-->
+</head>
+<body>
+	<div class="container">
+		<header class="row">
+			<a href="/"><img src="http://placekitten.com/1170/150" alt="" class="img-responsive"></a>
+		</header>
+
+		<nav class="row navblock">
+			<ul class="nav nav-justified">
+				<li><a href="/">Accueil</a></li>
+				<li class="dropdown">
+					<a data-target="#" href="." data-toggle="dropdown">Galerie <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						$tags$
+					</ul>
+				</li>
+				<li><a href="#">Commande</a></li>
+				<li><a href="#">À propos</a></li>
+				<li><a href="#">Contact</a></li>
+			</ul>
+		</nav>
+
+		<!-- <div class="row navblock">
+			<ul class="nav nav-justified">
+				$tags$
+			</ul>
+		</div> -->
+
+		<article class="row content">
+            $body$
+		</article>
+	</div>
+
+	<script src="/js/jquery-2.0.3_min.js"></script>
+	<script src="/js/bootstrap.min.js"></script>
+	<script src="/js/lightbox-2.6.min.js"></script>
+</body>
+</html>
