@@ -5,3 +5,6 @@ site.exe
 
 *.sublime-project
 *.sublime-workspace
+
+articles
+*.md
