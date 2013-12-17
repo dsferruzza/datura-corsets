@@ -27,7 +27,7 @@ main = do
   setForeignEncoding utf8
   hakyll $ do
 
-    tags <- buildTags "articles/**.md" (fromCapture "categories/*/index.html")
+    tags <- buildTags "articles/**.md" (fromCapture "galerie/*/index.html")
 
     tagsRules tags $ \tag pattern -> do
         let title = tag
