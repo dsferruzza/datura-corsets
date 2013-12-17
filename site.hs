@@ -91,6 +91,20 @@ main = do
                 >>= removeIndexHtml
                 >>= relativizeUrlsFix
 
+    create ["galerie/index.html"] $ do
+        route idRoute
+        compile $ do
+            articles <- loadAll "articles/**.md"
+            let indexCtx =
+                    listField "articles" (articleContext tags) (return articles) <>
+                    field "tags" (\_ -> renderTagListCustom tags) <>
+                    defaultContext
+            makeItem ""
+                >>= loadAndApplyTemplate "templates/galerie.html" indexCtx
+                >>= loadAndApplyTemplate "templates/default.html" (field "tags" (\_ -> renderTagListCustom tags) <> defaultContext)
+                >>= removeIndexHtml
+                >>= relativizeUrlsFix
+
     match "templates/*" $ compile templateCompiler
 
 
