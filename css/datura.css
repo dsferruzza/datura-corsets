@@ -22,6 +22,11 @@
 	overflow: hidden;
 }
 
+footer {
+	margin-top: 20px;
+	padding: 20px;
+	background: #CCC;
+}
 
 
 /* Customize the nav-justified links to be fill the entire space of the .navbar */
