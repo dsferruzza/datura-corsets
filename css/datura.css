@@ -17,9 +17,15 @@
 }
 
 .thumbnail-grid div {
-	height: 150px;
-	margin-bottom: 20px;
+	max-height: 175px;
+	margin-bottom: 24px;
 	overflow: hidden;
+}
+
+.thumbnail-grid .caption {
+	padding-top: 3px;
+	padding-bottom: 3px;
+	margin-bottom: 0;
 }
 
 footer {
