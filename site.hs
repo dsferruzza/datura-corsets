@@ -12,7 +12,7 @@ import           Text.Blaze.Html                 (toHtml, toValue, (!))
 import           Text.Blaze.Html.Renderer.String (renderHtml)
 import qualified Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5.Attributes as A
-import           System.FilePath (takeBaseName,takeDirectory,(</>),splitFileName,splitPath,joinDrive,isDrive,isPathSeparator,hasDrive)
+import           System.FilePath (takeDirectory,splitFileName,splitPath,joinDrive,isDrive,isPathSeparator,hasDrive)
 import           System.Locale (TimeLocale, defaultTimeLocale)
 import           Control.Applicative (Alternative (..), (<$>))
 import           Control.Monad (msum,liftM)
