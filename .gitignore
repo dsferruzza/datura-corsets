@@ -1,10 +1,11 @@
 _*
 *.hi
 *.o
-site.exe
+*.exe
 
 *.sublime-project
 *.sublime-workspace
 
 articles
 *.md
+!README.md
