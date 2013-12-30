@@ -1,3 +1,3 @@
 ghc --make site.hs
-site rebuild
+upx site.exe --best
 pause

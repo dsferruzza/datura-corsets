@@ -1,0 +1,2 @@
+site rebuild
+pause
