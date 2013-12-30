@@ -28,8 +28,8 @@ main = do
   hakyll $ do
 
     tags <- buildTags "articles/**.md" (fromCapture "galerie/*/index.html")
-
-    tagsRules tags $ \tag pattern -> do
+    tagsDependencies <- makePatternDependency "articles/**.md"
+    rulesExtraDependencies [tagsDependencies] $ tagsRules tags $ \tag pattern -> do
         let title = tag
         route idRoute
         compile $ do
