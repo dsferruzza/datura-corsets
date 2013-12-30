@@ -91,7 +91,7 @@ main = do
                 >>= removeIndexHtml
                 >>= relativizeUrlsFix
 
-    create ["galerie/index.html"] $ do
+    rulesExtraDependencies [tagsDependencies] $ create ["galerie/index.html"] $ do
         route idRoute
         compile $ do
             articles <- loadAll "articles/**.md"
