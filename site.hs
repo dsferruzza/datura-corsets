@@ -93,21 +93,6 @@ main = do
                 >>= loadAndApplyTemplate "templates/default.html" (field "tags" (\_ -> renderTagListCustom tags) <> defaultContext)
                 >>= relativizeUrlsFix
 
-    match "index.md" $ do
-        route $ setExtension "html"
-        compile $ do
-            articles <- loadAll "articles/**.md"
-            let indexCtx =
-                    listField "articles" (articleContext tags) (return articles) <>
-                    field "tags" (\_ -> renderTagListCustom tags) <>
-                    defaultContext
-            pandocCompiler
-                >>= applyAsTemplate indexCtx
-                >>= loadAndApplyTemplate "templates/index.html" indexCtx
-                >>= loadAndApplyTemplate "templates/default.html" (field "tags" (\_ -> renderTagListCustom tags) <> defaultContext)
-                >>= removeIndexHtml
-                >>= relativizeUrlsFix
-
     rulesExtraDependencies [tagsDependencies] $ create ["galerie/index.html"] $ do
         route idRoute
         compile $ do
