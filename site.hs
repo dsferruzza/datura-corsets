@@ -88,9 +88,10 @@ main = do
 
     match "pages/**.html" $ do
         route $ niceRoute "pages"
-        compile $ pandocCompiler
-            >>= loadAndApplyTemplate "templates/default.html" (field "tags" (\_ -> renderTagListCustom tags) <> defaultContext)
-            >>= relativizeUrlsFix
+        compile $ do
+            getResourceBody
+                >>= loadAndApplyTemplate "templates/default.html" (field "tags" (\_ -> renderTagListCustom tags) <> defaultContext)
+                >>= relativizeUrlsFix
 
     match "index.md" $ do
         route $ setExtension "html"
