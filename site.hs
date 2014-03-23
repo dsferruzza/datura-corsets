@@ -60,23 +60,23 @@ main = do
         compile copyFileCompiler
 
     match "articles/**.md" $ do
-        route $ niceRoute "article" `composeRoutes` setExtension "html"
+        route $ niceRoute "articles" `composeRoutes` setExtension "html"
         compile $ pandocCompiler
             >>= loadAndApplyTemplate "templates/article.html" (articleContext tags)
             >>= loadAndApplyTemplate "templates/default.html" (field "tags" (\_ -> renderTagListCustom tags) <> defaultContext)
             >>= relativizeUrlsFix
 
     match "articles/**.jpg" $ do
-        route $ niceRoute "article"
+        route $ niceRoute "articles"
         compile copyFileCompiler
 
     match "articles/**.jpg" $ version "thumb" $ do
-        route $ niceRoute "article" `composeRoutes` setExtension "thumb.jpg"
+        route $ niceRoute "articles" `composeRoutes` setExtension "thumb.jpg"
         compile $ getResourceLBS
             >>= withItemBody (unixFilterLBS "convert" ["-resize", "100x100", "-", "-"])
 
     match "articles/**/index.jpg" $ version "cover" $ do
-        route $ niceRoute "article" `composeRoutes` setExtension "cover.jpg"
+        route $ niceRoute "articles" `composeRoutes` setExtension "cover.jpg"
         compile $ getResourceLBS
             >>= withItemBody (unixFilterLBS "convert" ["-resize", "500x250", "-", "-"])
 
