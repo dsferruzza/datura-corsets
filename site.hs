@@ -76,6 +76,12 @@ main = do
         compile $ getResourceLBS
             >>= withItemBody (unixFilterLBS "convert" ["-resize", "500x250", "-", "-"])
 
+    match "pages/**.md" $ do
+        route $ niceRoute "page" `composeRoutes` setExtension "html"
+        compile $ pandocCompiler
+            >>= loadAndApplyTemplate "templates/default.html" (field "tags" (\_ -> renderTagListCustom tags) <> defaultContext)
+            >>= relativizeUrlsFix
+
     match "index.md" $ do
         route $ setExtension "html"
         compile $ do
