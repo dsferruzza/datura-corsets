@@ -55,6 +55,10 @@ main = do
         route   idRoute
         compile compressCssCompiler
 
+    match "fonts/*" $ do
+        route   idRoute
+        compile copyFileCompiler
+
     match "articles/**.md" $ do
         route $ niceRoute "article" `composeRoutes` setExtension "html"
         compile $ pandocCompiler
