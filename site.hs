@@ -39,7 +39,7 @@ main = do
                         (constField "title" title <>
                             constField "body" list <>
                             defaultContext)
-                >>= loadAndApplyTemplate "templates/default.html" (field "tags" (\_ -> renderTagListCustom tags) <> defaultContext)
+                >>= loadAndApplyTemplate "templates/default.html" (constField "title" title <> field "tags" (\_ -> renderTagListCustom tags) <> defaultContext)
                 >>= removeIndexHtml
                 >>= relativizeUrlsFix
 
@@ -103,7 +103,7 @@ main = do
                     defaultContext
             makeItem ""
                 >>= loadAndApplyTemplate "templates/galerie.html" indexCtx
-                >>= loadAndApplyTemplate "templates/default.html" (field "tags" (\_ -> renderTagListCustom tags) <> defaultContext)
+                >>= loadAndApplyTemplate "templates/default.html" (constField "title" "Galerie" <> field "tags" (\_ -> renderTagListCustom tags) <> defaultContext)
                 >>= removeIndexHtml
                 >>= relativizeUrlsFix
 
