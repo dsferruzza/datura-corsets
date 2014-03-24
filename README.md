@@ -36,13 +36,34 @@ An article is defined by:
 
 _Images must have a **lowercase** `.jpg` extension!_
 
-### Other pages
+### Pages
 
-**TODO**
+Pages represent unique pages, like *contact* or *about*.
 
+A page is defined by:
+
+- **a Markdown file** `pages/[name].md` which contains:
+	- a **title** metadata: the name of the page that should be in the title HTML tag
+	- a content: the content of the page
+
+**OR**
+
+- **an HTML file** `pages/[name].html` which contains:
+	- a **title** metadata: the name of the page that should be in the title HTML tag
+	- a content: the HTML content of the page
+
+**In both ways, the generated page will use the `default.html` template.**
+
+The generated pages will be put directly under the root of project, so:
+
+- avoid a `pages/[name].md` and a `pages/[name].html` with the same name
+- use `pages/index.md` or `pages/index.html` to make the homepage
+
+<!--
 ### Homepage gallery
 
 **TODO**
+-->
 
 ## License
 
