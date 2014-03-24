@@ -59,6 +59,10 @@ main = do
         route   idRoute
         compile copyFileCompiler
 
+    match "favicon.ico" $ do
+        route   idRoute
+        compile copyFileCompiler
+
     match "articles/**.md" $ do
         route $ niceRoute "articles" `composeRoutes` setExtension "html"
         compile $ pandocCompiler
