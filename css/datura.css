@@ -28,6 +28,10 @@ body {
 	background: url('../img/fond.jpg');
 }
 
+hr {
+	border-color: #000;
+}
+
 .container {
 	padding: 20px;
 }
