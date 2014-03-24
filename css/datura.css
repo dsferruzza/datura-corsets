@@ -47,7 +47,7 @@ body {
 }
 
 .thumbnail-grid div {
-	max-height: 175px;
+	height: 175px;
 	margin-bottom: 24px;
 	overflow: hidden;
 }
