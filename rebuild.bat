@@ -1,2 +1,2 @@
-site rebuild
+site rebuild && site check
 pause

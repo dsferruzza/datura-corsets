@@ -1,2 +1,2 @@
-site build
+site build && site check
 pause
