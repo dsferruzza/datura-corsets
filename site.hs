@@ -67,7 +67,7 @@ main = do
         route $ niceRoute "articles" `composeRoutes` setExtension "html"
         compile $ pandocCompiler
             >>= loadAndApplyTemplate "templates/article.html" (articleContext tags)
-            >>= loadAndApplyTemplate "templates/default.html" (field "tags" (\_ -> renderTagListCustom tags) <> defaultContext)
+            >>= loadAndApplyTemplate "templates/default.html" (listField "cover" coverPicContext getFirstPicInDir <> field "tags" (\_ -> renderTagListCustom tags) <> defaultContext)
             >>= relativizeUrlsFix
 
     match "articles/**.jpg" $ do
