@@ -1,3 +1,3 @@
-ghc --make site.hs
+ghc --make site.hs -O3
 upx site.exe --best
 pause
