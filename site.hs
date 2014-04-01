@@ -41,7 +41,7 @@ main = do
                             defaultContext)
                 >>= loadAndApplyTemplate "templates/default.html" (constField "title" title <> layoutDefaultContext tags)
                 >>= removeIndexHtml
-                >>= relativizeUrlsFix
+                >>= relativizeUrls
 
     match "img/*" $ do
         route   idRoute
@@ -68,7 +68,7 @@ main = do
         compile $ pandocCompiler
             >>= loadAndApplyTemplate "templates/article.html" (articleContext tags)
             >>= loadAndApplyTemplate "templates/default.html" (listField "cover" coverPicContext getFirstPicInDir <> layoutDefaultContext tags)
-            >>= relativizeUrlsFix
+            >>= relativizeUrls
 
     match "articles/**.jpg" $ do
         route $ niceRoute "articles"
@@ -88,14 +88,14 @@ main = do
         route $ niceRoute "pages" `composeRoutes` setExtension "html"
         compile $ pandocCompiler
             >>= loadAndApplyTemplate "templates/default.html" (layoutDefaultContext tags)
-            >>= relativizeUrlsFix
+            >>= relativizeUrls
 
     match "pages/**.html" $ do
         route $ niceRoute "pages"
         compile $ do
             getResourceBody
                 >>= loadAndApplyTemplate "templates/default.html" (layoutDefaultContext tags)
-                >>= relativizeUrlsFix
+                >>= relativizeUrls
 
     rulesExtraDependencies [tagsDependencies] $ create ["galerie/index.html"] $ do
         route idRoute
@@ -109,7 +109,7 @@ main = do
                 >>= loadAndApplyTemplate "templates/galerie.html" indexCtx
                 >>= loadAndApplyTemplate "templates/default.html" (constField "title" "Galerie" <> layoutDefaultContext tags)
                 >>= removeIndexHtml
-                >>= relativizeUrlsFix
+                >>= relativizeUrls
 
     match "templates/*" $ compile templateCompiler
 
@@ -208,38 +208,3 @@ alphabetical =
     sortByM :: (Monad m, Ord k) => (a -> m k) -> [a] -> m [a]
     sortByM f xs = liftM (map fst . sortBy (comparing snd)) $
                    mapM (\x -> liftM (x,) (f x)) xs
-
---------------------------------------------------------------------------------
--- FIX RELATIVE URL BUG ON WINDOWS
-
-relativizeUrlsFix :: Item String -> Compiler (Item String)
-relativizeUrlsFix item = do
-    route <- getRoute $ itemIdentifier item
-    return $ case route of
-        Nothing -> item
-        Just r -> fmap (relativizeUrlsWith $ toSiteRootFix r) item
-
-toSiteRootFix :: String -> String
-toSiteRootFix = emptyException . joinPathFix . map parent
-              . filter relevant . splitPath . takeDirectory
-  where
-    parent = const ".."
-    emptyException [] = "."
-    emptyException x = x
-    relevant "." = False
-    relevant "/" = False
-    relevant _ = True
-
-joinPathFix :: [FilePath] -> FilePath
-joinPathFix x = foldr combineFix "" x
-
-combineFix :: FilePath -> FilePath -> FilePath
-combineFix a b | hasDrive b || (not (null b) && isPathSeparator (head b)) = b
-               | otherwise = combineAlwaysFix a b
-
-combineAlwaysFix :: FilePath -> FilePath -> FilePath
-combineAlwaysFix a b | null a = b
-                     | null b = a
-                     | isPathSeparator (last a) = a ++ b
-                     | isDrive a = joinDrive a b
-                     | otherwise = a ++ "/" ++ b
