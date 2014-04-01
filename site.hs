@@ -7,12 +7,11 @@ import           Data.Time.Format (parseTime)
 import           Data.Ord (comparing)
 import           Data.List (intercalate)
 import           Hakyll
-import           Hakyll.Web.Html
 import           Text.Blaze.Html                 (toHtml, toValue, (!))
 import           Text.Blaze.Html.Renderer.String (renderHtml)
 import qualified Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5.Attributes as A
-import           System.FilePath (takeDirectory,splitFileName,splitPath,joinDrive,isDrive,isPathSeparator,hasDrive)
+import           System.FilePath (takeDirectory,splitFileName)
 import           System.Locale (TimeLocale, defaultTimeLocale)
 import           Control.Applicative (Alternative (..), (<$>))
 import           Control.Monad (msum,liftM)
@@ -169,7 +168,7 @@ layoutDefaultContext tags = field "tags" (\_ -> renderTagListCustom tags) <> def
 renderTagListCustom :: Tags -> Compiler (String)
 renderTagListCustom = renderTags makeLink (intercalate "")
   where
-    makeLink tag url count _ _ = renderHtml $
+    makeLink tag url _ _ _ = renderHtml $
         H.li $ H.a ! A.href (toValue url) $ toHtml (tag)
 
 --------------------------------------------------------------------------------
