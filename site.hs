@@ -39,7 +39,7 @@ main = do
                         (constField "title" title <>
                             constField "body" list <>
                             defaultContext)
-                >>= loadAndApplyTemplate "templates/default.html" (constField "title" title <> field "tags" (\_ -> renderTagListCustom tags) <> defaultContext)
+                >>= loadAndApplyTemplate "templates/default.html" (constField "title" title <> layoutDefaultContext tags)
                 >>= removeIndexHtml
                 >>= relativizeUrlsFix
 
@@ -67,7 +67,7 @@ main = do
         route $ niceRoute "articles" `composeRoutes` setExtension "html"
         compile $ pandocCompiler
             >>= loadAndApplyTemplate "templates/article.html" (articleContext tags)
-            >>= loadAndApplyTemplate "templates/default.html" (listField "cover" coverPicContext getFirstPicInDir <> field "tags" (\_ -> renderTagListCustom tags) <> defaultContext)
+            >>= loadAndApplyTemplate "templates/default.html" (listField "cover" coverPicContext getFirstPicInDir <> layoutDefaultContext tags)
             >>= relativizeUrlsFix
 
     match "articles/**.jpg" $ do
@@ -87,14 +87,14 @@ main = do
     match "pages/**.md" $ do
         route $ niceRoute "pages" `composeRoutes` setExtension "html"
         compile $ pandocCompiler
-            >>= loadAndApplyTemplate "templates/default.html" (field "tags" (\_ -> renderTagListCustom tags) <> defaultContext)
+            >>= loadAndApplyTemplate "templates/default.html" (layoutDefaultContext tags)
             >>= relativizeUrlsFix
 
     match "pages/**.html" $ do
         route $ niceRoute "pages"
         compile $ do
             getResourceBody
-                >>= loadAndApplyTemplate "templates/default.html" (field "tags" (\_ -> renderTagListCustom tags) <> defaultContext)
+                >>= loadAndApplyTemplate "templates/default.html" (layoutDefaultContext tags)
                 >>= relativizeUrlsFix
 
     rulesExtraDependencies [tagsDependencies] $ create ["galerie/index.html"] $ do
@@ -107,7 +107,7 @@ main = do
                     defaultContext
             makeItem ""
                 >>= loadAndApplyTemplate "templates/galerie.html" indexCtx
-                >>= loadAndApplyTemplate "templates/default.html" (constField "title" "Galerie" <> field "tags" (\_ -> renderTagListCustom tags) <> defaultContext)
+                >>= loadAndApplyTemplate "templates/default.html" (constField "title" "Galerie" <> layoutDefaultContext tags)
                 >>= removeIndexHtml
                 >>= relativizeUrlsFix
 
@@ -158,6 +158,11 @@ articleList tags pattern preprocess' = do
     articles <- loadAll pattern
     processed <- preprocess' articles
     applyTemplateList articleItemTpl (articleContext tags) processed
+
+--------------------------------------------------------------------------------
+
+layoutDefaultContext :: Tags -> Context String
+layoutDefaultContext tags = field "tags" (\_ -> renderTagListCustom tags) <> defaultContext
 
 --------------------------------------------------------------------------------
 
