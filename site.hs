@@ -95,6 +95,7 @@ main = do
         route $ niceRoute "pages"
         compile $ do
             getResourceBody
+                >>= applyAsTemplate (layoutDefaultContext tags)
                 >>= loadAndApplyTemplate "templates/default.html" (layoutDefaultContext tags)
                 >>= removeIndexHtml
                 >>= relativizeUrls
@@ -103,10 +104,7 @@ main = do
         route idRoute
         compile $ do
             articles <- loadAll "articles/**.md"
-            let indexCtx =
-                    listField "articles" (articleContext tags) (return articles) <>
-                    field "tags" (\_ -> renderTagListCustom tags) <>
-                    defaultContext
+            let indexCtx = listField "articles" (articleContext tags) (return articles) <> (layoutDefaultContext tags)
             makeItem ""
                 >>= loadAndApplyTemplate "templates/galerie.html" indexCtx
                 >>= loadAndApplyTemplate "templates/default.html" (constField "title" "Galerie" <> layoutDefaultContext tags)
