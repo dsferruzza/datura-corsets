@@ -67,6 +67,7 @@ main = do
         compile $ pandocCompiler
             >>= loadAndApplyTemplate "templates/article.html" (articleContext tags)
             >>= loadAndApplyTemplate "templates/default.html" (listField "cover" coverPicContext getFirstPicInDir <> layoutDefaultContext tags)
+            >>= removeIndexHtml
             >>= relativizeUrls
 
     match "articles/**.jpg" $ do
@@ -87,6 +88,7 @@ main = do
         route $ niceRoute "pages" `composeRoutes` setExtension "html"
         compile $ pandocCompiler
             >>= loadAndApplyTemplate "templates/default.html" (layoutDefaultContext tags)
+            >>= removeIndexHtml
             >>= relativizeUrls
 
     match "pages/**.html" $ do
@@ -94,6 +96,7 @@ main = do
         compile $ do
             getResourceBody
                 >>= loadAndApplyTemplate "templates/default.html" (layoutDefaultContext tags)
+                >>= removeIndexHtml
                 >>= relativizeUrls
 
     rulesExtraDependencies [tagsDependencies] $ create ["galerie/index.html"] $ do
