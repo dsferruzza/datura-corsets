@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings, TupleSections #-}
+import           Network (withSocketsDo)
 import           Data.Monoid ((<>))
 import           Data.List (isInfixOf,sortBy)
 import           Data.Time.Clock (UTCTime (..))
@@ -24,7 +25,7 @@ main = do
   setLocaleEncoding utf8        -- These 3 lines deal with an encoding problem on Windows:
   setFileSystemEncoding utf8    --   when having some characters like ' in markdown content, site couldn't build
   setForeignEncoding utf8
-  hakyll $ do
+  withSocketsDo $ hakyll $ do   -- withSocketsDo fixes a bug with external links & the checker ; see https://github.com/jaspervdj/hakyll/issues/236
 
     tags <- buildTags "articles/**.md" (fromCapture "galerie/*/index.html")
     tagsDependencies <- makePatternDependency "articles/**.md"
