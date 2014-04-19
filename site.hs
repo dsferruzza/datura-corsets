@@ -8,7 +8,7 @@ import           Data.Time.Format (parseTime)
 import           Data.Ord (comparing)
 import           Data.List (intercalate)
 import           Hakyll
-import           Text.Blaze.Html                 (toHtml, toValue, (!))
+import           Text.Blaze.Html (toHtml, toValue, (!))
 import           Text.Blaze.Html.Renderer.String (renderHtml)
 import qualified Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5.Attributes as A
