@@ -101,6 +101,10 @@ main = do
                 >>= removeIndexHtml
                 >>= relativizeUrls
 
+    match "pages/img/*" $ do
+        route $ niceRoute "pages"
+        compile copyFileCompiler
+
     rulesExtraDependencies [tagsDependencies] $ create ["galerie/index.html"] $ do
         route idRoute
         compile $ do
