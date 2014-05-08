@@ -25,7 +25,13 @@
 
 
 body {
-	background: url('../img/fond.jpg');
+	background: #777;
+}
+
+@media (min-width: 768px) {
+	body {
+		background: url('../img/fond.jpg');
+	}
 }
 
 hr {
