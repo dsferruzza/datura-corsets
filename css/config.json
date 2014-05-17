@@ -1,5 +1,4 @@
 {
-  "id": 9727413,
   "vars": {
     "@gray-darker": "lighten(#000, 13.5%)",
     "@gray-dark": "lighten(#000, 20%)",
@@ -380,6 +379,7 @@
   ],
   "js": [
     "dropdown.js",
+    "tab.js",
     "transition.js"
   ]
 }
