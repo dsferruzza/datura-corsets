@@ -101,7 +101,7 @@ main = do
                 >>= removeIndexHtml
                 >>= relativizeUrls
 
-    match "pages/img/*" $ do
+    match "pages/img/**" $ do
         route $ niceRoute "pages"
         compile copyFileCompiler
 
