@@ -105,6 +105,11 @@ main = do
         route $ niceRoute "pages"
         compile copyFileCompiler
 
+    match "pages/img/**" $ version "thumb" $ do
+        route $ niceRoute "pages" `composeRoutes` setExtension "thumb.jpg"
+        compile $ getResourceLBS
+            >>= withItemBody (unixFilterLBS "convert" ["-resize", "200x200", "-", "-"])
+
     rulesExtraDependencies [tagsDependencies] $ create ["galerie/index.html"] $ do
         route idRoute
         compile $ do
