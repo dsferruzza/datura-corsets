@@ -59,11 +59,7 @@ The generated pages will be put directly under the root of project, so:
 - avoid a `pages/[name].md` and a `pages/[name].html` with the same name
 - use `pages/index.md` or `pages/index.html` to make the homepage
 
-<!--
-### Homepage gallery
-
-**TODO**
--->
+Also, images (with a **lowercase** `.jpg` extension) put inside `pages/img/` will be copied in the `img/` folder.
 
 ## License
 
