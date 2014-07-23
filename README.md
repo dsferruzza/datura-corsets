@@ -9,7 +9,17 @@ The build is designed for Windows, but things should work similarly on Unix syst
 
 ## Requirements
 
-You need `ghc` (an Haskell compiler) and `hakyll` module from cabal (see http://jaspervdj.be/hakyll/) to compile `site.hs`.
+You need `ghc` (an Haskell compiler) to compile `site.hs`.
+
+For a clean build, you can do:
+- install haskell platform
+- `cabal update`
+- `cabal install cabal-install`
+- clone this repo
+- `cabal sandbox init`
+- `cabal install --dependencies-only`
+
+Then, use `compile.bat` to compile the site generator.
 
 The `compile.bat` script also expect `upx` to be either in the path or in the same directory (see http://upx.sourceforge.net/).
 This is only used to reduce the size of the final executable (so it is optional).

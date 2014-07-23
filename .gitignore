@@ -2,6 +2,10 @@ _*
 *.hi
 *.o
 *.exe
+.cabal*
+cabal.sandbox.config
+cabal.config
+dist
 
 *.sublime-project
 *.sublime-workspace

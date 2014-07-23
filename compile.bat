@@ -1,3 +1,3 @@
-ghc --make site.hs -O3 -threaded -Wall
-upx site.exe --best
+cabal build
+upx dist/build/datura-corsets/datura-corsets.exe --best
 pause
