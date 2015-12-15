@@ -394,6 +394,7 @@
     "navs.less",
     "navbar.less",
     "thumbnails.less",
+    "alerts.less",
     "media.less",
     "component-animations.less",
     "dropdowns.less"
@@ -403,5 +404,5 @@
     "tab.js",
     "transition.js"
   ],
-  "customizerUrl": "http://getbootstrap.com/customize/?id=4c563babdd4efd0082b4"
+  "customizerUrl": "http://getbootstrap.com/customize/?id=a08fc7bc436aa2e3f902"
 }
