@@ -4,7 +4,7 @@ import           Network (withSocketsDo)
 import           Data.Monoid ((<>))
 import           Data.List (isInfixOf,sortBy)
 import           Data.Time.Clock (UTCTime (..))
-import           Data.Time.Format (parseTime)
+import           Data.Time.Format (TimeLocale, defaultTimeLocale, parseTimeM)
 import           Data.Ord (comparing)
 import           Data.List (intercalate)
 import           Hakyll
@@ -13,8 +13,7 @@ import           Text.Blaze.Html.Renderer.String (renderHtml)
 import qualified Text.Blaze.Html5 as H
 import qualified Text.Blaze.Html5.Attributes as A
 import           System.FilePath (takeDirectory,splitFileName)
-import           System.Locale (TimeLocale, defaultTimeLocale)
-import           Control.Applicative (Alternative (..), (<$>))
+import           Control.Applicative (Alternative (..))
 import           Control.Monad (msum,liftM)
 import           GHC.IO.Encoding
 
@@ -209,7 +208,7 @@ fakeGetItemUTC locale id' = do
   where
     empty'     = fail $ "Hakyll.Web.Template.Context.fakeGetItemUTC: " ++
         "could not parse time for " ++ show id'
-    parseTime' = parseTime locale
+    parseTime' = (parseTimeM True) locale
 
 alphabetical :: MonadMetadata m => [Item a] -> m [Item a]
 alphabetical =
