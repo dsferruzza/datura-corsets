@@ -1,2 +1,2 @@
-dist\build\datura-corsets\datura-corsets rebuild && dist\build\datura-corsets\datura-corsets check
+dist\datura-corsets rebuild && dist\datura-corsets check
 pause

@@ -15,7 +15,7 @@ cabal-version:       >=1.10
 executable datura-corsets
   main-is:             site.hs
   build-depends:       base == 4.*
-                     , hakyll == 4.7.4.0
+                     , hakyll == 4.8.3.1
                      , filepath
                      , blaze-html
                      , time

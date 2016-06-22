@@ -12,12 +12,9 @@ The build is designed for Windows, but things should work similarly on Unix syst
 You need `ghc` (an Haskell compiler) to compile `site.hs`.
 
 For a clean build, you can do:
-- install haskell platform
-- `cabal update`
-- `cabal install cabal-install`
+- install [stack](http://haskellstack.org)
 - clone this repo
-- `cabal sandbox init`
-- `cabal install --dependencies-only`
+- `stack build`
 
 Then, use `compile.bat` to compile the site generator.
 

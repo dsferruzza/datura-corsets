@@ -1,3 +1,3 @@
-cabal build
-upx dist/build/datura-corsets/datura-corsets.exe --best
+stack install --local-bin-path dist
+upx dist/datura-corsets.exe --best
 pause
