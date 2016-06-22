@@ -42,7 +42,7 @@ main = do
                 >>= removeIndexHtml
                 >>= relativizeUrls
 
-    match "img/*" $ do
+    match "images/*" $ do
         route   idRoute
         compile copyFileCompiler
 
